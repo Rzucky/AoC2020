@@ -1,7 +1,7 @@
 import linecache
 
-file = open('tepor.txt', 'r')
-#file = open('aoc9.txt', 'r')
+#file = open('tepor.txt', 'r')
+file = open('aoc9.txt', 'r')
 
 trenutni = []
 lista = []
@@ -9,20 +9,20 @@ for lines in file:
 	lista.append(lines.strip())
 
 #loading preamble
-for i in range(1,6):
-	line = linecache.getline('tepor.txt', i)
+for i in range(1,26):
+	line = linecache.getline('aoc9.txt', i)
 	trenutni.append(line.strip())
 
-print(trenutni)
+#print(trenutni)
 
 #the rest of the files
-for i in range(5,len(lista)):
+for i in range(25,len(lista)):
 	k = int(lista[i].strip())
 	
 	valid = False
 	find = False
-	for i in range(5):
-		for j in range(5):
+	for i in range(25):
+		for j in range(25):
 			if int(trenutni[i].strip()) + int(trenutni[j].strip()) == k and int(trenutni[i].strip()) != int(trenutni[j].strip()):
 				valid = True
 				find = True
@@ -43,18 +43,15 @@ find = False
 for i in range(len(lista)):
 	trap = []
 	trap.append(int(lista[i]))
-	#count = int(lista[i])
-	count = 0
+	cnt = 0
 	index = i+1
-	kaj = 0
-	while(count < k):
-		count += trap[kaj]
-		#print(f'count {count}')
-		kaj += 1
-		#print(kaj)
-		#print(f'trap: {trap}')
-		if count == k:
-			#print(f'trap tocan: {trap}')
+	a = 0
+	#for each index, filling up trap array until it hits either the right number or goes over
+	#if it goes over, it tries again with the new starting index
+	while(cnt < k):
+		cnt += trap[a]
+		a += 1
+		if cnt == k:
 			find = True
 			break
 
@@ -63,8 +60,6 @@ for i in range(len(lista)):
 	if find:
 		break
 
-	#print(f'nije uspio za i:  {i}')
-
-print(f'trap tocan za {k}: {trap}')
+#print(f'trap tocan za {k}: {trap}')
 rez = min(trap) + max(trap)
-print(rez)
+print(f'Sum of smallest and largest:{rez}')
