@@ -1,15 +1,12 @@
 from collections import Counter
 
-file = open('tepor.txt', 'r')
-#file = open('aoc8.txt', 'r')
+#file = open('tepor.txt', 'r')
+file = open('aoc8.txt', 'r')
 
 lista = []
 
 for line in file:
 	lista.append(line.strip())
-
-
-#print(lista)
 
 posjeceni = []
 for k in range(len(lista)):
@@ -20,16 +17,14 @@ index = 0
 for k in range(len(lista)):
 	line = lista[index]
 
+	#wrong one
 	if posjeceni[index] == 1:
-		print('ponovilo se')
 		break
 
 	posjeceni[index] = 1
 
 	naredba = line[:3]
-	#print(naredba)
 	number = line[4:]
-	#print(number)
 
 	if naredba == 'acc':
 		counter += int(number)
@@ -41,24 +36,13 @@ for k in range(len(lista)):
 	elif naredba == 'jmp':
 		index += int(number)
 
+	if line == 'end':
+		break
 
-	#print(index)
-print(f'accumulator in a broken one is {counter}')
-
-
-
-posjeceni = []
-for k in range(len(lista)):
-	posjeceni.append(0)
+print(f'Accumulator value before breakign - {counter}')
 
 
-counter = 0
-index = 0
-kant = 0
-# kant = lista.count('nop')
-# print(kant)
-# kant += lista.count('jmp')
-#print(kant)
+#temp array to find all nop and jmp
 liss = []
 for k in range(len(lista)):
 	line = lista[k]
@@ -66,8 +50,10 @@ for k in range(len(lista)):
 	liss.append(naredba)
 
 z = Counter(liss)
-print(z)
 
+#counting number of jmp and nop to check each permutation
+kant = z['jmp']
+kant += z['nop']
 
 nova = []
 aj = 0
@@ -78,34 +64,41 @@ for k in range(len(lista)):
 
 	aj += 1
 
+
 izbacilo = False
 
 for ja in range(kant):
-	
+
+	templista = lista.copy()
 	search = nova[ja]
 	line = lista[search]
 	if 'nop' in line:
-		line = line.replace('nop', 'jmp')
+		templista[search] = line.replace('nop', 'jmp')
 
 	elif 'jmp' in line:
-		line = line.replace('jmp', 'nop')
+		templista[search] = line.replace('jmp', 'nop')
 	
+	posjeceni = []
+	for k in range(len(lista)):
+		posjeceni.append(0)
+
+	counter = 0
+	index = 0
 
 	for k in range(len(lista)):
-		line = lista[index]
 
+		line = templista[index]
+
+		#wrong one
 		if posjeceni[index] == 1:
-			print('ponovilo se')
-			izbacilo = True
 			break
 
 		posjeceni[index] = 1
 
 		naredba = line[:3]
-		#print(naredba)
-		number = line[4:]
-		#print(number)
 
+		number = line[4:]
+		
 		if naredba == 'acc':
 			counter += int(number)
 			index += 1
@@ -116,5 +109,12 @@ for ja in range(kant):
 		elif naredba == 'jmp':
 			index += int(number)
 
-	if(not izbacilo):
-		print(counter)
+		#reached end of the file
+		if line == 'end':
+			izbacilo = True
+			break
+
+	if(izbacilo):
+		break
+
+print(f'Accumulator value after fixing - {counter}')
